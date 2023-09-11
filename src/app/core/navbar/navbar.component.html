@@ -1,12 +1,14 @@
 <mat-toolbar color="primary">
   <span>{{ env.appName }}</span>
   <div class="links-container">
-      <a
-        *ngFor="let link of links"
-        [routerLink]="link.path"
-        routerLinkActive="active"
-        class="link"
-      >{{ link.label }}</a>
+    <a
+      *ngFor="let link of links"
+      [routerLink]="link.path"
+      routerLinkActive="active"
+      class="link"
+    >
+    {{ link.label }}
+    </a>
   </div>
   <span class="spacer"></span>
   <button mat-icon-button class="hamburger-menu-toggle" aria-label="Navigation menu toggle" [matMenuTriggerFor]="hamburgerMenu">
@@ -17,8 +19,9 @@
       *ngFor="let link of links"
       [routerLink]="link.path"
       routerLinkActive="active"
-      class="link"
       mat-menu-item
-    >{{ link.label }}</a>
+    >
+      {{ link.label }}
+    </a>
   </mat-menu>
 </mat-toolbar>
