@@ -12,6 +12,6 @@ export class NavbarComponent {
   env = environment;
   links: NavbarLink[] = [
     { label: 'Rampa', path: Routes.OiledRamp },
-    { label: 'Carro', path: Routes.Car },
+    { label: 'Carro', path: Routes.CarLift },
   ];
 }

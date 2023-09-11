@@ -8,6 +8,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./oiled-ramp/oiled-ramp.module').then((m) => m.OiledRampModule),
   },
+  {
+    path: ProjectRoutes.CarLift,
+    loadChildren: () =>
+      import('./car-lift/car-lift.module').then((m) => m.CarLiftModule),
+  }
 ];
 
 @NgModule({
