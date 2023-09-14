@@ -1,0 +1,55 @@
+@import "../../../assets/styles/breakpoints";
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.hamburger-menu-toggle {
+  display: block;
+  background-color: transparent;
+  border: none;
+  color: #fff
+}
+
+.links-container {
+  display: none;
+  align-items: center;
+  font-size: 1.1rem;
+  margin: 0 6px;
+
+  > .link {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 4px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: 200ms ease-out;
+
+    &:hover::after, &.active::after {
+      content: "";
+      display: block;
+      height: 2px;
+      width: 100%;
+      background-color: #fff;
+      animation: linkHover 200ms ease-out;
+    }
+  }
+}
+
+@include breakpoint(md) {
+  .hamburger-menu-toggle {
+    display: none;
+  }
+  .links-container {
+    display: flex;
+  }
+}
+
+@keyframes linkHover {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
