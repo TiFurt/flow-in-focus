@@ -1,3 +1,3 @@
 export const environment = {
-  appName: 'Geogebra DEV',
+  appName: 'Geogebra DEV'
 };

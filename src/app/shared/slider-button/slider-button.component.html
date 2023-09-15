@@ -1,0 +1,28 @@
+<div class="stepper-field">
+  <mat-form-field floatLabel="always">
+    <mat-label>{{ label }}</mat-label>
+    <input
+      class="input-field"
+      matInput
+      type="number"
+      placeholder="0"
+      [max]="max"
+      [min]="min"
+      [ngModel]="control.value"
+      (ngModelChange)="control.setValue($event)" />
+    <span class="metric" matTextSuffix> {{ metric }}</span>
+  </mat-form-field>
+
+  <mat-slider
+    class="slider-field"
+    [min]="min"
+    [max]="max"
+    [step]="step"
+    discrete
+    [displayWith]="formatLabel">
+    <input
+      matSliderThumb
+      [ngModel]="control.value"
+      (ngModelChange)="control.setValue($event)" />
+  </mat-slider>
+</div>

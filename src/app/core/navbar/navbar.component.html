@@ -5,13 +5,16 @@
       *ngFor="let link of links"
       [routerLink]="link.path"
       routerLinkActive="active"
-      class="link"
-    >
-    {{ link.label }}
+      class="link">
+      {{ link.label }}
     </a>
   </div>
   <span class="spacer"></span>
-  <button mat-icon-button class="hamburger-menu-toggle" aria-label="Navigation menu toggle" [matMenuTriggerFor]="hamburgerMenu">
+  <button
+    mat-icon-button
+    class="hamburger-menu-toggle"
+    aria-label="Navigation menu toggle"
+    [matMenuTriggerFor]="hamburgerMenu">
     <mat-icon>menu</mat-icon>
   </button>
   <mat-menu #hamburgerMenu="matMenu">
@@ -19,8 +22,7 @@
       *ngFor="let link of links"
       [routerLink]="link.path"
       routerLinkActive="active"
-      mat-menu-item
-    >
+      mat-menu-item>
       {{ link.label }}
     </a>
   </mat-menu>

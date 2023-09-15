@@ -6,12 +6,12 @@ import { Routes } from '../enums/routes.enum';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss'],
+  styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
   env = environment;
   links: NavbarLink[] = [
     { label: 'Rampa', path: Routes.OiledRamp },
-    { label: 'Carro', path: Routes.CarLift },
+    { label: 'Carro', path: Routes.CarLift }
   ];
 }

@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
   templateUrl: './oiled-ramp.component.html',
   styleUrls: ['./oiled-ramp.component.scss']
 })
-export class OiledRampComponent {
-
-}
+export class OiledRampComponent {}
