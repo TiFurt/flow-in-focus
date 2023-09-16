@@ -1,22 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatSliderModule } from '@angular/material/slider';
 import { Metric } from 'src/app/shared/slider-button/enums/metric.enum';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-slider-button',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatSliderModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule
-  ],
   templateUrl: './slider-button.component.html',
   styleUrls: ['./slider-button.component.scss']
 })
