@@ -6,12 +6,12 @@ const routes: Routes = [
   {
     path: ProjectRoutes.OiledRamp,
     loadChildren: () =>
-      import('./oiled-ramp/oiled-ramp.module').then((m) => m.OiledRampModule),
+      import('./oiled-ramp/oiled-ramp.module').then(m => m.OiledRampModule)
   },
   {
     path: ProjectRoutes.CarLift,
     loadChildren: () =>
-      import('./car-lift/car-lift.module').then((m) => m.CarLiftModule),
+      import('./car-lift/car-lift.module').then(m => m.CarLiftModule)
   }
 ];
 
@@ -19,4 +19,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

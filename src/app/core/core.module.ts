@@ -16,7 +16,7 @@ const components = [NavbarComponent];
     MatToolbarModule,
     MatIconModule,
     RouterModule,
-    MatMenuModule,
-  ],
+    MatMenuModule
+  ]
 })
 export class CoreModule {}

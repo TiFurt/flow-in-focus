@@ -14,7 +14,7 @@ $breakpoints: (
     }
   } @else {
     @media (min-width: $point) {
-        @content;
-      }
+      @content;
+    }
   }
 }
