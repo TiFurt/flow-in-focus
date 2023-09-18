@@ -1,0 +1,20 @@
+.mat-mdc-card {
+  margin-bottom: 20px;
+
+  &.formula-inputs > .mat-mdc-card-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 300px));;
+    grid-gap: 10px;
+  }
+
+  .mat-mdc-card-content > .graphic-view {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  & > .mat-mdc-card-title {
+    margin-left: 10px;
+  }
+}

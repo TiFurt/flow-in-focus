@@ -9,11 +9,13 @@
       [max]="max"
       [min]="min"
       [ngModel]="control.value"
+      [disabled]="control.disabled"
       (ngModelChange)="control.setValue($event)" />
     <span class="metric" matTextSuffix> {{ metric }}</span>
   </mat-form-field>
 
   <mat-slider
+    *ngIf="!hideSlider"
     class="slider-field"
     [min]="min"
     [max]="max"
