@@ -92,6 +92,7 @@ export class OiledRampComponent implements OnInit, OnDestroy {
 
         this.drawGround(s);
         this.drawRamp(s);
+        this.drawAngle(s);
         this.drawCube(s);
         this.drawForceVector(s);
         this.drawNormalVector(s);
@@ -103,7 +104,7 @@ export class OiledRampComponent implements OnInit, OnDestroy {
   }
 
   private drawGround(sketch: any): void {
-    sketch.translate(this.cubeSize, this.canvasHeight - 40);
+    sketch.translate(this.cubeSize + 10, this.canvasHeight - 40);
     sketch.noStroke();
     sketch.fill(129);
     sketch.rect(0, 0, this.canvasWidth, 40);
@@ -116,6 +117,15 @@ export class OiledRampComponent implements OnInit, OnDestroy {
     sketch.rotate(-angle);
     sketch.fill(217);
     sketch.rect(0, 0, this.canvasWidth, 15);
+  }
+
+  private drawAngle(sketch: any): void {
+    const { angle } = this.formGroup.value;
+
+    sketch.stroke(130, 95, 201);
+    sketch.strokeWeight(2);
+    sketch.noFill();
+    sketch.arc(0, 0, 150, 150, 0, angle, sketch.OPEN);
   }
 
   private drawCube(sketch: any): void {
@@ -158,7 +168,12 @@ export class OiledRampComponent implements OnInit, OnDestroy {
 
   private drawNormalVector(sketch: any): void {
     let { weight } = this.formGroup.getRawValue();
+    const { angle } = this.formGroup.getRawValue();
     sketch.translate(0, -this.cubeSize / 2);
+
+    if (angle >= 90) {
+      return;
+    }
 
     if (weight < 5) {
       weight = 5;
