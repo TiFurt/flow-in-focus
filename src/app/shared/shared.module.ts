@@ -8,6 +8,7 @@ import { SliderButtonComponent } from './slider-button/slider-button.component';
 
 @NgModule({
   declarations: [SliderButtonComponent],
+  exports: [SliderButtonComponent],
   imports: [
     CommonModule,
     MatSliderModule,

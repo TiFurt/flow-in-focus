@@ -1,25 +1,29 @@
-.stepper-field {
-  display: grid;
-  grid-gap: 5px;
+:host {
   max-width: 300px;
-  padding: 5px;
+
+  .stepper-field {
+    display: grid;
+    grid-gap: 5px;
+    padding: 5px;
+  }
+
+  .input-field {
+    text-align: right;
+  }
+
+  .metric {
+    margin-left: 3px;
+  }
+
+  input.input-field::-webkit-outer-spin-button,
+  input.input-field::-webkit-inner-spin-button {
+    display: none;
+  }
+
+  input.input-field {
+    -moz-appearance: textfield;
+  }
 }
 
-.input-field {
-  text-align: right;
-}
-
-.metric {
-  margin-left: 3px;
-}
-
-input.input-field::-webkit-outer-spin-button,
-input.input-field::-webkit-inner-spin-button {
-  display: none;
-}
-
-input.input-field {
-  -moz-appearance: textfield;
-}
 
 

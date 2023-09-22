@@ -1,1 +1,30 @@
-<p>oiled-ramp works!</p>
+<mat-card class="formula-inputs" *ngIf="formGroup">
+  <mat-card-title>Inputs para o cálculo</mat-card-title>
+  <mat-card-content>
+    <app-slider-button
+      label="Peso"
+      [metric]="metric.kilo"
+      [control]="formGroup.get('weight')"
+      [min]="0"></app-slider-button>
+
+    <app-slider-button
+      label="Ângulo"
+      [metric]="metric.degree"
+      [control]="formGroup.get('angle')"
+      [min]="0"
+      [max]="90"></app-slider-button>
+
+    <app-slider-button
+      label="Força"
+      [metric]="metric.neuton"
+      [control]="formGroup.get('force')"
+      [hideSlider]="true"></app-slider-button>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-title>Visualização</mat-card-title>
+  <mat-card-content>
+    <div id="graphic-container"></div>
+  </mat-card-content>
+</mat-card>
