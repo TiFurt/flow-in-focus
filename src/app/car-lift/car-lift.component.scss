@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  gap: 10px;
+  height: 100%;
+  flex-direction: column;
+}
+
+.fields-container {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: repeat(3, minmax(100px, 300px));
+  padding: 5px;
+  margin: auto;
+}
+
+.canvas-container,
+.formula-inputs {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.formula-inputs {
+  height: fit-content;
+}
+
+.canvas-container {
+  height: 100%;
+}
+
+#graphic-container {
+  flex: 1 1 auto;
+  border: 1px solid black;
+}

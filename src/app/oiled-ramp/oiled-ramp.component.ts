@@ -77,7 +77,7 @@ export class OiledRampComponent implements OnInit, OnDestroy {
   private createCanvas(): void {
     const sketch = s => {
       this.canvasWidth = s.windowWidth - 100;
-      this.canvasHeight = (this.canvasWidth / 4) * 3;
+      this.canvasHeight = this.canvasWidth * 0.75;
 
       s.setup = () => {
         const canvas2 = s.createCanvas(this.canvasWidth, this.canvasHeight);

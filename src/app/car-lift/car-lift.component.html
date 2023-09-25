@@ -1,1 +1,51 @@
-<p>car-lift works!</p>
+<mat-card class="formula-inputs" *ngIf="formGroup">
+  <mat-card-title>Inputs para o cálculo</mat-card-title>
+  <mat-card-content class="fields-container">
+    <app-slider-button
+      class="field"
+      label="Raio da seta"
+      [metric]="metric.meter"
+      [control]="formGroup.get('strength.radius')"
+      [min]="0.1"
+      [step]="0.5"
+      [max]="10">
+    </app-slider-button>
+
+    <app-slider-button
+      class="field"
+      label="Peso da seta"
+      [metric]="metric.meter"
+      [control]="formGroup.get('strength.force')"
+      [min]="0.1"
+      [step]="0.5"
+      [max]="10">
+    </app-slider-button>
+
+    <app-slider-button
+      class="field"
+      label="Raio do Carro"
+      [metric]="metric.meter"
+      [control]="formGroup.get('car.radius')"
+      [min]="0.1"
+      [step]="0.5"
+      [max]="10">
+    </app-slider-button>
+
+    <app-slider-button
+      class="field"
+      label="Peso do Carro"
+      [metric]="metric.neuton"
+      [control]="formGroup.get('car.weight')"
+      [min]="100"
+      [step]="100"
+      [max]="20000">
+    </app-slider-button>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="canvas-container">
+  <mat-card-title>Visualização</mat-card-title>
+  <mat-card-content id="graphic-container">
+    <div id="graphic-view"></div>
+  </mat-card-content>
+</mat-card>
