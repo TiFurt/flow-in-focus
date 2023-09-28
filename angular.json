@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "geogebra-clone": {
+    "flow-in-focus": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/geogebra-clone",
+            "outputPath": "dist/flow-in-focus",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -67,10 +67,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "geogebra-clone:build:production"
+              "browserTarget": "flow-in-focus:build:production"
             },
             "development": {
-              "browserTarget": "geogebra-clone:build:development"
+              "browserTarget": "flow-in-focus:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,7 +78,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "geogebra-clone:build"
+            "browserTarget": "flow-in-focus:build"
           }
         },
         "test": {

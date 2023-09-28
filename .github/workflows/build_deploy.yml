@@ -14,9 +14,9 @@ jobs:
         with:
           github_access_token: ${{ secrets.TOKEN }}
           build_configuration: production
-          base_href: /geogebra-clone/
+          base_href: /flow-in-focus/
           deploy_branch: gh-pages
-          angular_dist_build_folder: dist/geogebra-clone
+          angular_dist_build_folder: dist/flow-in-focus
 
 permissions:
   contents: write
