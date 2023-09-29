@@ -141,7 +141,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
     const { strength, car } = this.formGroup.getRawValue();
 
     const force = (car.weight * strength.area) / car.area;
-    this.formGroup.get('strength.force').setValue(force.toFixed(2));
+    this.formGroup.get('strength.force').setValue(Math.round(force));
   }
 
   private calculatePressure(): void {
