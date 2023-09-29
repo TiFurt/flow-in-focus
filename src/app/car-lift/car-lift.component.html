@@ -122,6 +122,50 @@
 <mat-card class="canvas-container">
   <mat-card-title>Visualização</mat-card-title>
   <mat-card-content id="graphic-container">
+    <div class="button-container">
+      <button
+        mat-fab
+        color="primary"
+        (click)="play()"
+        matTooltip="Iniciar animação"
+        aria-label="play button">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+      <button
+        calss="gray-button"
+        mat-fab
+        (click)="pause()"
+        matTooltip="Pausar animação"
+        aria-label="pause button">
+        <mat-icon>pause</mat-icon>
+      </button>
+      <button
+        mat-fab
+        color="warn"
+        (click)="reset()"
+        matTooltip="Resetar valores e animação"
+        aria-label="reset button">
+        <mat-icon>stop</mat-icon>
+      </button>
+    </div>
+    <div class="button-container">
+      <button
+        calss="gray-button"
+        mat-fab
+        (click)="previousStep()"
+        matTooltip="Passo anterior"
+        aria-label="previus step button">
+        <mat-icon>skip_previous</mat-icon>
+      </button>
+      <button
+        calss="gray-button"
+        mat-fab
+        (click)="nextStep()"
+        matTooltip="Próximo passo"
+        aria-label="next step button">
+        <mat-icon>skip_next</mat-icon>
+      </button>
+    </div>
     <div id="graphic-view"></div>
   </mat-card-content>
 </mat-card>

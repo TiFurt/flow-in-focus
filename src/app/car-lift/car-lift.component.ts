@@ -22,17 +22,24 @@ export class CarLiftComponent implements OnInit, OnDestroy {
 
   private _destroyed$ = new Subject<void>();
 
-  carImage: any;
-  formGroup: FormGroup;
   metric = Metric;
-  canvas: p5;
-  canvasWidth: number;
-  canvasHeight: number;
   totalWidthStraightRects = 200;
   bottomRectHeight = 50;
   triangleHeight = 10;
   totalMeterLineItens = 9;
-  stepSize: number;
+  strenghtHeightDicrease = 0;
+  strenghtHeightDicreaseStep = 0;
+  carHeightIncrease = 0;
+  carHeightIncreaseStep = 0;
+  stepSize = 3;
+  IsPlaying: boolean;
+  carImage: any;
+  formGroup: FormGroup;
+  initialFormGroupValue: any;
+  canvas: p5;
+  canvasWidth: number;
+  canvasHeight: number;
+  scaleSize: number;
   availableHeight: number;
   strengthTopPosition: number;
   carTopPosition: number;
@@ -51,12 +58,37 @@ export class CarLiftComponent implements OnInit, OnDestroy {
   }
 
   play(): void {
-    while (this.getTotalRadius() < 200) {
-      const { strength, car } = this.formGroup.getRawValue();
+    const { strength, car } = this.formGroup.getRawValue();
 
-      this.formGroup.get('strength.radius').setValue(strength.radius + 1);
-      this.formGroup.get('car.radius').setValue(car.radius + 1);
-    }
+    this.strenghtHeightDicreaseStep = this.scaleSize * 0.015;
+
+    this.carHeightIncreaseStep =
+      (strength.area * this.strenghtHeightDicreaseStep) / car.area;
+
+    this.IsPlaying = true;
+  }
+
+  pause(): void {
+    this.strenghtHeightDicreaseStep = 0;
+    this.carHeightIncreaseStep = 0;
+    this.IsPlaying = false;
+  }
+
+  reset(): void {
+    this.strenghtHeightDicrease = 0;
+    this.carHeightIncrease = 0;
+    this.formGroup.reset(this.initialFormGroupValue);
+    this.pause();
+  }
+
+  nextStep(): void {
+    this.strenghtHeightDicrease += this.stepSize;
+    this.carHeightIncrease += this.stepSize;
+  }
+
+  previousStep(): void {
+    this.strenghtHeightDicrease -= this.stepSize;
+    this.carHeightIncrease -= this.stepSize;
   }
 
   private createFormGroup(): void {
@@ -74,6 +106,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
         area: [{ value: 314.16, disabled: true }]
       })
     });
+    this.initialFormGroupValue = this.formGroup.value;
 
     this.setListeners();
   }
@@ -84,20 +117,14 @@ export class CarLiftComponent implements OnInit, OnDestroy {
         takeUntil(this._destroyed$),
         debounceTime(50),
         switchMap(() => {
-          this.calculateForce();
           this.calculateArea();
+          this.calculateForce();
           this.calculatePressure();
           this.changeDetector.detectChanges();
           return of();
         })
       )
       .subscribe();
-  }
-
-  private calculateForce(): void {
-    const carWeight = this.formGroup.get('car.weight').value;
-
-    this.formGroup.get('strength.force').setValue(carWeight / 100);
   }
 
   private calculateArea(): void {
@@ -108,6 +135,13 @@ export class CarLiftComponent implements OnInit, OnDestroy {
 
     this.formGroup.get('strength.area').setValue(strengthArea.toFixed(2));
     this.formGroup.get('car.area').setValue(carArea.toFixed(2));
+  }
+
+  private calculateForce(): void {
+    const { strength, car } = this.formGroup.getRawValue();
+
+    const force = (car.weight * strength.area) / car.area;
+    this.formGroup.get('strength.force').setValue(force.toFixed(2));
   }
 
   private calculatePressure(): void {
@@ -132,6 +166,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
 
       s.setup = () => {
         this.carImage = s.loadImage('assets/images/car.png');
+        console.log(s.getTargetFrameRate());
 
         const canvas2 = s.createCanvas(this.canvasWidth, this.canvasHeight);
         canvas2.parent('graphic-view');
@@ -140,7 +175,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
       };
 
       s.draw = () => {
-        this.setUpGlobalLocations();
+        this.setUpGlobalLocations(s);
 
         s.background(255);
         s.translate(this.getHalfCanvasWidth(), this.getHalfCanvasHeight());
@@ -157,21 +192,42 @@ export class CarLiftComponent implements OnInit, OnDestroy {
     this.canvas = new p5(sketch);
   }
 
-  private setUpGlobalLocations(): void {
+  private setUpGlobalLocations(sketch: any): void {
     this.availableHeight =
       this.canvasHeight - this.bottomRectHeight - this.triangleHeight;
 
-    this.stepSize = this.availableHeight / this.totalMeterLineItens;
+    this.strenghtHeightDicrease += this.strenghtHeightDicreaseStep;
+    this.carHeightIncrease += this.carHeightIncreaseStep;
+
+    this.scaleSize = this.availableHeight / this.totalMeterLineItens;
     this.strengthTopPosition =
-      -this.getHalfCanvasHeight() + this.stepSize + this.triangleHeight;
+      -this.getHalfCanvasHeight() +
+      this.scaleSize +
+      this.triangleHeight +
+      this.strenghtHeightDicrease;
 
     this.carTopPosition =
-      -this.getHalfCanvasHeight() + this.stepSize * 8 + this.triangleHeight;
+      -this.getHalfCanvasHeight() +
+      this.scaleSize * 8 +
+      this.triangleHeight -
+      this.carHeightIncrease;
 
     this.strengthTubeHeight =
-      this.getHalfCanvasHeight() - this.strengthTopPosition;
+      this.getHalfCanvasHeight() -
+      this.strengthTopPosition -
+      this.bottomRectHeight;
 
-    this.carTubeHeight = this.getHalfCanvasHeight() - this.carTopPosition;
+    this.carTubeHeight =
+      this.getHalfCanvasHeight() - this.carTopPosition - this.bottomRectHeight;
+
+    if (this.IsPlaying) {
+      sketch.frameRate(120);
+      if (this.strengthTubeHeight <= this.scaleSize) {
+        this.pause();
+      }
+    } else {
+      sketch.frameRate(60);
+    }
   }
 
   private drawBottomRect(sketch: any): void {
@@ -277,6 +333,14 @@ export class CarLiftComponent implements OnInit, OnDestroy {
       strenghtRectPositionWidth + triangleWidth,
       heightPosition
     );
+
+    this.drawForceValue(
+      sketch,
+      `${strength.force} ${this.metric.neuton}`,
+      sketch.LEFT,
+      strenghtRectPositionWidth + 15,
+      this.strengthTopPosition - 20
+    );
   }
 
   private drawCarImage(sketch: any): void {
@@ -303,6 +367,27 @@ export class CarLiftComponent implements OnInit, OnDestroy {
       carWidth,
       carHeight
     );
+
+    this.drawForceValue(
+      sketch,
+      `${car.weight} ${this.metric.neuton}`,
+      sketch.RIGHT,
+      carRectPositionWidth - 15,
+      carRectPositionHeight + carHeight / 2
+    );
+  }
+
+  drawForceValue(
+    sketch: any,
+    text: string,
+    alight: string,
+    xPosition: number,
+    yPosition: number
+  ): void {
+    sketch.textSize(20);
+    sketch.textAlign(alight);
+    sketch.strokeWeight(1.5);
+    sketch.text(text, xPosition, yPosition);
   }
 
   private drawMeterVector(sketch: any): void {
@@ -326,7 +411,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
 
     for (let i = 1; i < this.totalMeterLineItens; i++) {
       const linePosition =
-        this.getHalfCanvasHeight() - this.bottomRectHeight - this.stepSize * i;
+        this.getHalfCanvasHeight() - this.bottomRectHeight - this.scaleSize * i;
 
       sketch.strokeWeight(2);
       sketch.line(0, linePosition, 5, linePosition);
@@ -357,7 +442,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
   }
 
   private getTotalRadius(): number {
-    const { strength, car } = this.formGroup.value;
+    const { strength, car } = this.formGroup.getRawValue();
     return (
       this.convertRadiusToWidth(strength.radius) +
       this.convertRadiusToWidth(car.radius)
