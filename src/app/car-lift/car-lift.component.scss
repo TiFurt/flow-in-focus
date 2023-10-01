@@ -8,10 +8,11 @@
 .values-container {
   display: grid;
   grid-gap: 5px;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 33%));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 600px));
   padding: 5px;
   margin: auto;
   width: 100%;
+  justify-content: center;
 }
 
 .column {
@@ -56,10 +57,10 @@
   display: flex;
   gap: 10px;
   justify-content: center;
-
-  .gray-button {
-    background-color: #535353;
-  }
+}
+.mat-mdc-fab.mat-accent,
+.mat-mdc-mini-fab.mat-accent {
+  --mdc-fab-container-color: #7c7c7c;
 }
 
 .equation {
