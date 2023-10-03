@@ -22,6 +22,6 @@ jobs:
       - name: Install ⚙️
         run: npm install
       - name: Build 🛠
-        run: npm run build:prod
+        run: npm run build-prod
       - name: Test 📋
-        run: npm run test:headless
+        run: npm run test-headless
