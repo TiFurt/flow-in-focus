@@ -33,7 +33,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
   carHeightIncrease = 0;
   carHeightIncreaseStep = 0;
   stepSize = 3;
-  canvasWidthGap = 400;
+  canvasWidthGap = this.getCanvasWidthGapResponsive();
   IsPlaying: boolean;
   carImage: any;
   formGroup: FormGroup;
@@ -62,8 +62,9 @@ export class CarLiftComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.canvasWidth = event.target.innerWidth - 100;
-    this.canvasHeight = (this.canvasWidth / 4) * 3;
+    this.canvasWidthGap = this.getCanvasWidthGapResponsive();
+    this.canvasWidth = event.target.innerWidth - this.canvasWidthGap;
+    this.canvasHeight = this.getCanvasHeightResponsive();
     this.canvas.resizeCanvas(this.canvasWidth, this.canvasHeight);
   }
 
@@ -176,7 +177,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
   private createCanvas(): void {
     const sketch = s => {
       this.canvasWidth = s.windowWidth - this.canvasWidthGap;
-      this.canvasHeight = this.canvasWidth * 0.3;
+      this.canvasHeight = this.getCanvasHeightResponsive();
 
       s.setup = () => {
         this.carImage = s.loadImage('assets/images/car.png');
@@ -195,6 +196,14 @@ export class CarLiftComponent implements OnInit, OnDestroy {
         s.background(255);
 
         s.translate(this.getHalfCanvasWidth(), this.getHalfCanvasHeight());
+
+        if (window.innerWidth < 800) {
+          s.scale(0.7);
+        } else if (window.innerWidth < 1100) {
+          s.scale(0.8);
+        } else if (window.innerWidth < 1400) {
+          s.scale(0.9);
+        }
 
         this.drawBottomRect(s);
         this.drawStrenghtRect(s);
@@ -577,5 +586,25 @@ export class CarLiftComponent implements OnInit, OnDestroy {
 
   private convertRadiusToWidth(radius: number): number {
     return radius * 10;
+  }
+
+  private getCanvasWidthGapResponsive(): number {
+    if (window.innerWidth < 800) {
+      return 0;
+    } else if (window.innerWidth < 1000) {
+      return 100;
+    } else if (window.innerWidth < 1400) {
+      return 200;
+    } else {
+      return 400;
+    }
+  }
+
+  private getCanvasHeightResponsive(): number {
+    if (this.canvasWidth * 0.3 < 300) {
+      return 300;
+    }
+
+    return this.canvasWidth * 0.3;
   }
 }
