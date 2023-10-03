@@ -1,0 +1,27 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+
+jobs:
+  build_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build Job
+    steps:
+      - name: Checkout ✅
+        uses: actions/checkout@v2
+      - name: Setup Node.js 🏗
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install ⚙️
+        run: npm install
+      - name: Build 🛠
+        run: npm run build:prod
+      - name: Test 📋
+        run: npm run test:headless
