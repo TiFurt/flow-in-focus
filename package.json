@@ -1,13 +1,15 @@
 {
-  "name": "geogebra-clone",
+  "name": "flow-in-focus",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "lint": "ng lint"
+    "test": "ng test --watch=true",
+    "lint": "ng lint",
+    "build-prod": "ng build --configuration production",
+    "test-headless": "ng test --watch=false --browsers=ChromeHeadless"
   },
   "private": true,
   "dependencies": {

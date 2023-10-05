@@ -1,1 +1,171 @@
-<p>car-lift works!</p>
+<mat-card class="formula-inputs" *ngIf="formGroup">
+  <mat-card-content class="values-container">
+    <div class="column">
+      <h2>Cálculo pressão tubo da seta</h2>
+
+      <div class="equation">
+        <span>P</span>
+        <span>=</span>
+        <div class="division">
+          <span>Força</span>
+          <hr />
+          <span>Área</span>
+        </div>
+
+        <span>=></span>
+
+        <div class="division">
+          <span
+            >{{ formGroup.get('strenght.force').value }}
+            {{ metric.neuton }}
+          </span>
+          <hr />
+          <span
+            >{{ formGroup.get('strenght.area').value }}
+            {{ metric.meterSquare }}
+          </span>
+        </div>
+      </div>
+
+      <div class="equation">
+        <span>P</span>
+        <span>=</span>
+        <span
+          >{{ formGroup.get('strenght.pressure').value }}
+          {{ metric.pascal }}
+        </span>
+      </div>
+    </div>
+
+    <div class="column">
+      <h2>Inputs para o cálculo</h2>
+
+      <div class="fields-container">
+        <app-slider-button
+          class="field"
+          label="Raio da seta"
+          [metric]="metric.meter"
+          [control]="formGroup.get('strenght.radius')"
+          [min]="0.1"
+          [step]="0.1"
+          [max]="10">
+        </app-slider-button>
+
+        <app-slider-button
+          class="field"
+          label="Peso da seta"
+          [metric]="metric.neuton"
+          [control]="formGroup.get('strenght.force')"
+          [hideSlider]="true">
+        </app-slider-button>
+
+        <app-slider-button
+          class="field"
+          label="Raio do Carro"
+          [metric]="metric.meter"
+          [control]="formGroup.get('car.radius')"
+          [min]="0.1"
+          [step]="0.1"
+          [max]="10">
+        </app-slider-button>
+
+        <app-slider-button
+          class="field"
+          label="Peso do Carro"
+          [metric]="metric.neuton"
+          [control]="formGroup.get('car.weight')"
+          [min]="100"
+          [step]="100"
+          [max]="20000">
+        </app-slider-button>
+      </div>
+    </div>
+
+    <div class="column">
+      <h2>Cálculo pressão tubo do carro</h2>
+
+      <div class="equation">
+        <span>P</span>
+        <span>=</span>
+        <div class="division">
+          <span>Força</span>
+          <hr />
+          <span>Área</span>
+        </div>
+
+        <span>=></span>
+
+        <div class="division">
+          <span
+            >{{ formGroup.get('car.weight').value }} {{ metric.neuton }}
+          </span>
+          <hr />
+          <span
+            >{{ formGroup.get('car.area').value }}
+            {{ metric.meterSquare }}
+          </span>
+        </div>
+      </div>
+
+      <div class="equation">
+        <span>P</span>
+        <span>=</span>
+        <span
+          >{{ formGroup.get('strenght.pressure').value }}
+          {{ metric.pascal }}
+        </span>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="canvas-container">
+  <mat-card-title>Visualização</mat-card-title>
+  <mat-card-content id="graphic-container">
+    <div class="button-container">
+      <button
+        mat-fab
+        color="primary"
+        (click)="play()"
+        matTooltip="Iniciar animação"
+        aria-label="play button">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+      <button
+        color="accent"
+        mat-fab
+        (click)="pause()"
+        matTooltip="Pausar animação"
+        aria-label="pause button">
+        <mat-icon>pause</mat-icon>
+      </button>
+      <button
+        mat-fab
+        color="warn"
+        (click)="reset()"
+        matTooltip="Resetar valores e animação"
+        aria-label="reset button">
+        <mat-icon>stop</mat-icon>
+      </button>
+    </div>
+    <div class="button-container">
+      <button
+        color="accent"
+        mat-fab
+        (click)="previousStep()"
+        matTooltip="Passo anterior"
+        aria-label="previus step button">
+        <mat-icon>skip_previous</mat-icon>
+      </button>
+      <button
+        color="accent"
+        mat-fab
+        (click)="nextStep()"
+        matTooltip="Próximo passo"
+        aria-label="next step button">
+        <mat-icon>skip_next</mat-icon>
+      </button>
+    </div>
+    <div id="graphic-view"></div>
+  </mat-card-content>
+</mat-card>
