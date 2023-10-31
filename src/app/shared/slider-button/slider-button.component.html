@@ -10,6 +10,7 @@
       [min]="min"
       [ngModel]="control.value"
       [disabled]="control.disabled"
+      [ngStyle]="{ 'font-size': 1 * fontScale + 'rem' }"
       (ngModelChange)="control.setValue($event)" />
     <span class="metric" matTextSuffix> {{ metric }}</span>
   </mat-form-field>
