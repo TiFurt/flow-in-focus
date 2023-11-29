@@ -2,9 +2,27 @@
   <mat-card-title>Inputs para o cálculo</mat-card-title>
   <mat-card-content>
     <app-slider-button
+      label="Área"
+      [metric]="metric.squareMeter"
+      [control]="formGroup.get('area')"
+      [min]="0"></app-slider-button>
+
+    <app-slider-button
       label="Peso"
       [metric]="metric.kilo"
       [control]="formGroup.get('weight')"
+      [min]="0"></app-slider-button>
+
+    <app-slider-button
+      label="Viscosidade"
+      [metric]="metric.viscosity"
+      [control]="formGroup.get('viscosity')"
+      [min]="0"></app-slider-button>
+
+    <app-slider-button
+      label="Espessura do Óleo"
+      [metric]="metric.milimeter"
+      [control]="formGroup.get('oilSize')"
       [min]="0"></app-slider-button>
 
     <app-slider-button
@@ -15,9 +33,27 @@
       [max]="90"></app-slider-button>
 
     <app-slider-button
-      label="Força"
+      label="Velocidade Média"
+      [metric]="metric.meterPerSeccond"
+      [control]="formGroup.get('speed')"
+      [min]="0"></app-slider-button>
+
+    <app-slider-button
+      label="Força Tangencial"
       [metric]="metric.neuton"
-      [control]="formGroup.get('force')"
+      [control]="formGroup.get('tangencialForce')"
+      [hideSlider]="true"></app-slider-button>
+
+    <app-slider-button
+      label="Força de Atrito"
+      [metric]="metric.neuton"
+      [control]="formGroup.get('frictionForce')"
+      [hideSlider]="true"></app-slider-button>
+
+    <app-slider-button
+      label="Aceleração"
+      [metric]="metric.meterPerSeccondSquared"
+      [control]="formGroup.get('acceleration')"
       [hideSlider]="true"></app-slider-button>
   </mat-card-content>
 </mat-card>

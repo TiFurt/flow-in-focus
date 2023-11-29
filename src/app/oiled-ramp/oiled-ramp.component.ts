@@ -20,6 +20,11 @@ export class OiledRampComponent implements OnInit, OnDestroy {
   private _destroyed$ = new Subject<void>();
   private lastAngle = 0;
   private lastWeight = 0;
+  private lastViscosity = 0;
+  private lastOilSize = 0;
+  private lastSpeed = 0;
+  private lastArea = 0;
+  private readonly gravity = 10;
 
   metric = Metric;
   formGroup: FormGroup;
@@ -50,7 +55,13 @@ export class OiledRampComponent implements OnInit, OnDestroy {
     this.formGroup = this.fb.group({
       weight: [10],
       angle: [45],
-      force: [{ value: 0, disabled: true }]
+      viscosity: [0],
+      oilSize: [0],
+      speed: [10],
+      area: [10],
+      acceleration: [{ value: 0, disabled: true }],
+      tangencialForce: [{ value: 0, disabled: true }],
+      frictionForce: [{ value: 0, disabled: true }]
     });
 
     this.calculateForce();
@@ -63,15 +74,45 @@ export class OiledRampComponent implements OnInit, OnDestroy {
   }
 
   private calculateForce(): void {
-    const { weight, angle } = this.formGroup.value;
-    if (this.lastAngle === angle && this.lastWeight === weight) {
+    const { area, angle, viscosity, oilSize, speed, weight } =
+      this.formGroup.value;
+
+    if (
+      this.lastAngle === angle &&
+      this.lastWeight === weight &&
+      this.lastViscosity === viscosity &&
+      this.lastOilSize === oilSize &&
+      this.lastSpeed === speed &&
+      this.lastArea === area
+    ) {
       return;
     }
 
     this.lastAngle = angle;
     this.lastWeight = weight;
-    const force = weight * Math.sin((angle * Math.PI) / 180);
-    this.formGroup.get('force').setValue(force.toFixed(2));
+    this.lastViscosity = viscosity;
+    this.lastOilSize = oilSize;
+    this.lastSpeed = speed;
+    this.lastArea = area;
+
+    let tangencialForce: number;
+    let frictionForce: number;
+    let acceleration: number;
+    if (oilSize > 0 || viscosity > 0) {
+      const meterOilSize = oilSize / 1000;
+      frictionForce = weight * this.gravity * Math.sin(angle);
+      tangencialForce = viscosity * area * (speed / meterOilSize);
+      acceleration = (frictionForce - tangencialForce) / weight;
+    } else {
+      tangencialForce =
+        weight * this.gravity * Math.sin((angle * Math.PI) / 180);
+      acceleration = tangencialForce / weight;
+      frictionForce = 0;
+    }
+
+    this.formGroup.get('tangencialForce').setValue(tangencialForce.toFixed(2));
+    this.formGroup.get('frictionForce').setValue(frictionForce.toFixed(2));
+    this.formGroup.get('acceleration').setValue(acceleration.toFixed(2));
   }
 
   private createCanvas(): void {
@@ -92,6 +133,7 @@ export class OiledRampComponent implements OnInit, OnDestroy {
 
         this.drawGround(s);
         this.drawRamp(s);
+        this.drawOilLayer(s);
         this.drawAngle(s);
         this.drawCube(s);
         this.drawForceVector(s);
@@ -119,6 +161,24 @@ export class OiledRampComponent implements OnInit, OnDestroy {
     sketch.rect(0, 0, this.canvasWidth, 15);
   }
 
+  private drawOilLayer(sketch: any): void {
+    let { oilSize } = this.formGroup.value;
+
+    sketch.noStroke();
+
+    if (oilSize < 0.1) {
+      return;
+    }
+
+    if (oilSize > 1) {
+      oilSize = 1;
+    }
+
+    const oilHeight = sketch.map(oilSize, 0, 1, 0, 5);
+    sketch.fill(227, 175, 32, oilSize * 255);
+    sketch.rect(0, 0, this.canvasWidth, oilHeight);
+  }
+
   private drawAngle(sketch: any): void {
     const { angle } = this.formGroup.value;
 
@@ -141,27 +201,32 @@ export class OiledRampComponent implements OnInit, OnDestroy {
   }
 
   private drawForceVector(sketch: any): void {
-    let { force } = this.formGroup.getRawValue();
+    let { tangencialForce } = this.formGroup.getRawValue();
     sketch.translate(0, -this.cubeSize / 2);
 
-    if (force < 0.1) {
+    if (tangencialForce < 0.1) {
       return;
     }
 
-    if (force > 20) {
-      force = 20;
+    if (tangencialForce > 20) {
+      tangencialForce = 20;
     }
 
     sketch.stroke(146, 213, 136);
     sketch.strokeWeight(2);
     sketch.fill(146, 213, 136);
-    sketch.line(this.canvasWidth / 2, 0, this.canvasWidth / 2 - force * 10, 0);
-    sketch.triangle(
-      this.canvasWidth / 2 - force * 10,
+    sketch.line(
+      this.canvasWidth / 2,
       0,
-      this.canvasWidth / 2 - force * 10 + 5,
+      this.canvasWidth / 2 - tangencialForce * 10,
+      0
+    );
+    sketch.triangle(
+      this.canvasWidth / 2 - tangencialForce * 10,
+      0,
+      this.canvasWidth / 2 - tangencialForce * 10 + 5,
       -5,
-      this.canvasWidth / 2 - force * 10 + 5,
+      this.canvasWidth / 2 - tangencialForce * 10 + 5,
       5
     );
   }
@@ -205,6 +270,11 @@ export class OiledRampComponent implements OnInit, OnDestroy {
   private drawWeightVector(sketch: any): void {
     let { weight } = this.formGroup.getRawValue();
     const { angle } = this.formGroup.getRawValue();
+
+    if (angle >= 90) {
+      return;
+    }
+
     if (weight < 5) {
       weight = 5;
     }

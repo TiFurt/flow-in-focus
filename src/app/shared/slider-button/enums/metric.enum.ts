@@ -10,4 +10,8 @@ export enum Metric {
   neuton = 'N',
   pascal = 'Pa',
   degree = '°',
+  viscosity = 'Pa·s',
+  meterPerSeccond = 'm/s',
+  squareMeter = 'm²',
+  meterPerSeccondSquared = 'm/s²'
 }
