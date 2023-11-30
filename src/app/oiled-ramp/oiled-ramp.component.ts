@@ -32,11 +32,33 @@ export class OiledRampComponent implements OnInit, OnDestroy {
   canvasWidth: number;
   canvasHeight: number;
   cubeSize = 60;
+  isPlaying = false;
+  stepSize = 2;
+  distanceIncreaseStep = 0;
+  animationStart: Date;
+  initialCubePosition: {
+    x: number;
+    y: number;
+  };
+  cubePosition: {
+    x: number;
+    y: number;
+  };
 
   ngOnInit(): void {
     this.createFormGroup();
     this.listenToFormChanges();
     this.createCanvas();
+
+    this.initialCubePosition = {
+      x: this.canvasHeight / 2,
+      y: -this.cubeSize
+    };
+
+    this.cubePosition = {
+      x: this.canvasHeight / 2,
+      y: -this.cubeSize
+    };
   }
 
   ngOnDestroy(): void {
@@ -47,8 +69,25 @@ export class OiledRampComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.canvasWidth = event.target.innerWidth - 100;
-    this.canvasHeight = (this.canvasWidth / 4) * 3;
+    this.canvasHeight = event.target.innerWidth / 2;
     this.canvas.resizeCanvas(this.canvasWidth, this.canvasHeight);
+  }
+
+  play(): void {
+    this.cubePosition.x = this.canvasHeight - this.cubeSize;
+    this.distanceIncreaseStep = this.stepSize;
+    this.isPlaying = true;
+    this.animationStart = new Date();
+  }
+
+  pause(): void {
+    this.distanceIncreaseStep = 0;
+    this.cubePosition = {
+      x: this.initialCubePosition.x,
+      y: this.initialCubePosition.y
+    };
+    this.isPlaying = false;
+    this.animationStart = undefined;
   }
 
   private createFormGroup(): void {
@@ -103,6 +142,14 @@ export class OiledRampComponent implements OnInit, OnDestroy {
       frictionForce = weight * this.gravity * Math.sin(angle);
       tangencialForce = viscosity * area * (speed / meterOilSize);
       acceleration = (frictionForce - tangencialForce) / weight;
+
+      if (frictionForce < 0) {
+        frictionForce = frictionForce * -1;
+      }
+
+      if (acceleration < 0) {
+        acceleration = acceleration * -1;
+      }
     } else {
       tangencialForce =
         weight * this.gravity * Math.sin((angle * Math.PI) / 180);
@@ -118,7 +165,7 @@ export class OiledRampComponent implements OnInit, OnDestroy {
   private createCanvas(): void {
     const sketch = s => {
       this.canvasWidth = s.windowWidth - 100;
-      this.canvasHeight = this.canvasWidth * 0.75;
+      this.canvasHeight = this.canvasWidth / 2;
 
       s.setup = () => {
         const canvas2 = s.createCanvas(this.canvasWidth, this.canvasHeight);
@@ -129,6 +176,8 @@ export class OiledRampComponent implements OnInit, OnDestroy {
       };
 
       s.draw = () => {
+        this.setUpGlobalLocations(s);
+
         s.background(255);
 
         this.drawGround(s);
@@ -143,6 +192,27 @@ export class OiledRampComponent implements OnInit, OnDestroy {
     };
 
     this.canvas = new p5(sketch);
+  }
+
+  private setUpGlobalLocations(sketch: any): void {
+    if (!this.isPlaying) {
+      sketch.frameRate(60);
+      return;
+    }
+
+    const { acceleration } = this.formGroup.getRawValue();
+
+    const timeDiff =
+      (new Date().getTime() - this.animationStart.getTime()) / 1000;
+
+    this.cubePosition.x -=
+      this.distanceIncreaseStep * (acceleration * timeDiff);
+
+    sketch.frameRate(200);
+    if (this.cubePosition.x < -100 - this.cubeSize) {
+      this.pause();
+    }
+    return;
   }
 
   private drawGround(sketch: any): void {
@@ -166,7 +236,7 @@ export class OiledRampComponent implements OnInit, OnDestroy {
 
     sketch.noStroke();
 
-    if (oilSize < 0.1) {
+    if (oilSize < Number.MIN_VALUE) {
       return;
     }
 
@@ -174,7 +244,7 @@ export class OiledRampComponent implements OnInit, OnDestroy {
       oilSize = 1;
     }
 
-    const oilHeight = sketch.map(oilSize, 0, 1, 0, 5);
+    const oilHeight = sketch.map(oilSize, 0, 1, 0, 8);
     sketch.fill(227, 175, 32, oilSize * 255);
     sketch.rect(0, 0, this.canvasWidth, oilHeight);
   }
@@ -193,8 +263,8 @@ export class OiledRampComponent implements OnInit, OnDestroy {
     sketch.strokeWeight(2);
     sketch.fill(234);
     sketch.rect(
-      this.canvasWidth / 2,
-      -this.cubeSize,
+      this.cubePosition.x,
+      this.cubePosition.y,
       this.cubeSize,
       this.cubeSize
     );
@@ -216,17 +286,17 @@ export class OiledRampComponent implements OnInit, OnDestroy {
     sketch.strokeWeight(2);
     sketch.fill(146, 213, 136);
     sketch.line(
-      this.canvasWidth / 2,
+      this.cubePosition.x,
       0,
-      this.canvasWidth / 2 - tangencialForce * 10,
+      this.cubePosition.x - tangencialForce * 10,
       0
     );
     sketch.triangle(
-      this.canvasWidth / 2 - tangencialForce * 10,
+      this.cubePosition.x - tangencialForce * 10,
       0,
-      this.canvasWidth / 2 - tangencialForce * 10 + 5,
+      this.cubePosition.x - tangencialForce * 10 + 5,
       -5,
-      this.canvasWidth / 2 - tangencialForce * 10 + 5,
+      this.cubePosition.x - tangencialForce * 10 + 5,
       5
     );
   }
@@ -252,17 +322,17 @@ export class OiledRampComponent implements OnInit, OnDestroy {
     sketch.strokeWeight(2);
     sketch.fill(213, 136, 146);
     sketch.line(
-      this.canvasWidth / 2 + this.cubeSize / 2,
+      this.cubePosition.x + this.cubeSize / 2,
       0,
-      this.canvasWidth / 2 + this.cubeSize / 2,
+      this.cubePosition.x + this.cubeSize / 2,
       -(weight * 10 - 5)
     );
     sketch.triangle(
-      this.canvasWidth / 2 + this.cubeSize / 2,
+      this.cubePosition.x + this.cubeSize / 2,
       -(weight * 10 - 5),
-      this.canvasWidth / 2 + this.cubeSize / 2 - 5,
+      this.cubePosition.x + this.cubeSize / 2 - 5,
       -(weight * 10 - 5) + 5,
-      this.canvasWidth / 2 + this.cubeSize / 2 + 5,
+      this.cubePosition.x + this.cubeSize / 2 + 5,
       -(weight * 10 - 5) + 5
     );
   }
@@ -286,7 +356,7 @@ export class OiledRampComponent implements OnInit, OnDestroy {
     sketch.stroke(136, 143, 213);
     sketch.strokeWeight(2);
     sketch.fill(136, 143, 213);
-    sketch.translate(this.canvasWidth / 2 + this.cubeSize / 2, this.cubeSize);
+    sketch.translate(this.cubePosition.x + this.cubeSize / 2, this.cubeSize);
     sketch.rotate(angle);
     sketch.line(0, 0, 0, weight * 10);
     sketch.triangle(0, weight * 10, -5, weight * 10 - 5, 5, weight * 10 - 5);

@@ -58,9 +58,27 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card>
+<mat-card class="canvas-container">
   <mat-card-title>Visualização</mat-card-title>
   <mat-card-content>
+    <div class="button-container">
+      <button
+        mat-fab
+        color="primary"
+        (click)="play()"
+        matTooltip="Iniciar animação"
+        aria-label="play button">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+      <button
+        color="accent"
+        mat-fab
+        (click)="pause()"
+        matTooltip="Pausar animação"
+        aria-label="pause button">
+        <mat-icon>pause</mat-icon>
+      </button>
+    </div>
     <div id="graphic-container"></div>
   </mat-card-content>
 </mat-card>
