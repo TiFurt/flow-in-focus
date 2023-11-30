@@ -24,7 +24,7 @@ export class OiledRampComponent implements OnInit, OnDestroy {
   private lastOilSize = 0;
   private lastSpeed = 0;
   private lastArea = 0;
-  private readonly gravity = 10;
+  private readonly gravity = 9.80665;
 
   metric = Metric;
   formGroup: FormGroup;
