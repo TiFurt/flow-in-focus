@@ -183,15 +183,13 @@ export class CarLiftComponent implements OnInit, OnDestroy {
   private createCanvas(): void {
     const sketch = s => {
       this.canvasWidth = s.windowWidth - this.canvasWidthGap;
+      this.carImage = s.loadImage('assets/images/car.png');
       this.canvasHeight = this.getCanvasHeightResponsive();
 
       s.setup = () => {
-        this.carImage = s.loadImage('assets/images/car.png');
-        console.log(s.getTargetFrameRate());
-
         const canvas2 = s.createCanvas(this.canvasWidth, this.canvasHeight);
         this.canvasWidth += this.canvasWidthGap / 2;
-        canvas2.parent('graphic-view');
+        canvas2.parent('graphic-lift');
 
         s.background(255);
       };

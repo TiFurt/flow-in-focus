@@ -169,7 +169,7 @@ export class OiledRampComponent implements OnInit, OnDestroy {
 
       s.setup = () => {
         const canvas2 = s.createCanvas(this.canvasWidth, this.canvasHeight);
-        canvas2.parent('graphic-container');
+        canvas2.parent('graphic-oil');
 
         s.angleMode(s.DEGREES);
         s.background(255);
