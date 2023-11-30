@@ -10,6 +10,12 @@
     </a>
   </div>
   <span class="spacer"></span>
+
+  <mat-slide-toggle
+    #viewMode
+    [checked]="isFullScreen"
+    (change)="changeFullScreen($event.checked)"></mat-slide-toggle>
+
   <button
     mat-icon-button
     class="hamburger-menu-toggle"

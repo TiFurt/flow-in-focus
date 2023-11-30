@@ -9,13 +9,14 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import p5 from 'p5';
-import { Subject, debounceTime, of, switchMap, takeUntil } from 'rxjs';
+import { Subject, debounceTime, filter, of, switchMap, takeUntil } from 'rxjs';
 import {
   CarFormGroup,
   CarLift,
   CarLiftForm,
   StrenghtFormGroup
 } from 'src/app/car-lift/models/car-lift-form.model';
+import { FullScreenService } from 'src/app/shared/services/full-screen.service';
 import { Metric } from 'src/app/shared/slider-button/enums/metric.enum';
 
 @Component({
@@ -26,9 +27,11 @@ import { Metric } from 'src/app/shared/slider-button/enums/metric.enum';
 export class CarLiftComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private changeDetector = inject(ChangeDetectorRef);
+  private fullScreenService = inject(FullScreenService);
 
   private _destroyed$ = new Subject<void>();
 
+  fontScale = this.fullScreenService.normalScale;
   metric = Metric;
   totalWidthStraightRects = 200;
   bottomRectHeight = 50;
@@ -56,6 +59,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
   carTubeHeight: number;
 
   ngOnInit(): void {
+    this.listenFullScreen();
     this.createFormGroup();
 
     this.createCanvas();
@@ -130,6 +134,16 @@ export class CarLiftComponent implements OnInit, OnDestroy {
     this.initialFormGroupValue = this.formGroup.value;
 
     this.setListeners();
+  }
+
+  private listenFullScreen(): void {
+    this.fullScreenService.fullscreen$
+      .pipe(takeUntil(this._destroyed$))
+      .subscribe((isFullScreen: boolean) => {
+        this.fontScale = isFullScreen
+          ? this.fullScreenService.fullscreenScale
+          : this.fullScreenService.normalScale;
+      });
   }
 
   private setListeners(): void {
@@ -520,7 +534,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
     xPosition: number,
     yPosition: number
   ): void {
-    sketch.textSize(20);
+    sketch.textSize(20 * this.fontScale);
     sketch.textAlign(alight);
     sketch.strokeWeight(1.5);
     sketch.text(text, xPosition, yPosition);
@@ -552,7 +566,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
       sketch.strokeWeight(2);
       sketch.line(0, linePosition, 5, linePosition);
 
-      sketch.textSize(10);
+      sketch.textSize(10 * this.fontScale);
       sketch.textAlign(sketch.CENTER, sketch.CENTER);
       sketch.strokeWeight(1);
       sketch.text(i, 20, linePosition);
@@ -575,14 +589,6 @@ export class CarLiftComponent implements OnInit, OnDestroy {
     ) {
       sketch.line(initialXPosition, yPosition, initialXPosition + 5, yPosition);
     }
-  }
-
-  private getTotalRadius(): number {
-    const { strenght, car } = this.formGroup.getRawValue();
-    return (
-      this.convertRadiusToWidth(strenght.radius) +
-      this.convertRadiusToWidth(car.radius)
-    );
   }
 
   private getHalfCanvasWidth(): number {
