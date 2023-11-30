@@ -1,20 +1,41 @@
-.mat-mdc-card {
-  margin-bottom: 20px;
+:host {
+  display: flex;
+  gap: 10px;
+  height: 100%;
+  flex-direction: column;
 
-  &.formula-inputs > .mat-mdc-card-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 300px));;
-    grid-gap: 10px;
-  }
-
-  .mat-mdc-card-content > .graphic-view {
-    width: 100%;
+  .canvas-container {
     display: flex;
-    justify-content: center;
+    flex-flow: column;
+    gap: 10px;
     align-items: center;
+
+    .button-container {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
   }
 
-  & > .mat-mdc-card-title {
-    margin-left: 10px;
+  .mat-mdc-card {
+    margin-bottom: 20px;
+
+    &.formula-inputs > .mat-mdc-card-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 300px));
+      grid-gap: 10px;
+    }
+
+    .mat-mdc-card-content > .graphic-view {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    & > .mat-mdc-card-title {
+      margin-left: 10px;
+    }
   }
 }
+
