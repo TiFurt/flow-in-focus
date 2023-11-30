@@ -31,7 +31,7 @@ export class CarLiftComponent implements OnInit, OnDestroy {
 
   private _destroyed$ = new Subject<void>();
 
-  fontScale = 1;
+  fontScale = this.fullScreenService.normalScale;
   metric = Metric;
   totalWidthStraightRects = 200;
   bottomRectHeight = 50;
@@ -140,7 +140,9 @@ export class CarLiftComponent implements OnInit, OnDestroy {
     this.fullScreenService.fullscreen$
       .pipe(takeUntil(this._destroyed$))
       .subscribe((isFullScreen: boolean) => {
-        this.fontScale = isFullScreen ? 1.5 : 1;
+        this.fontScale = isFullScreen
+          ? this.fullScreenService.fullscreenScale
+          : this.fullScreenService.normalScale;
       });
   }
 
